@@ -1,12 +1,21 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 
-const roles = ["Frontend Developer", "React Developer", "UI Engineer","Fresher"];
+const roles = ["Frontend Developer", "React Developer", "Software Developer", "Fresher", "Backend Developer"];
 
 const Hero = () => {
   const roleRef = useRef(null);
 
   useLayoutEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    // If user prefers reduced motion, do NOT animate
+    if (prefersReducedMotion) {
+      return;
+    }
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ repeat: -1 });
 
@@ -24,11 +33,11 @@ const Hero = () => {
             duration: 0.4,
             ease: "power2.out",
           })
-          .to({}, { duration: 2 }); // pause between roles
+          .to({}, { duration: 2 });
       });
     });
 
-    return () => ctx.revert(); // cleanup (important for React)
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -38,6 +47,7 @@ const Hero = () => {
           Hi, I’m Joel Smith
         </h1>
 
+        {/* Static text is always visible */}
         <h2
           ref={roleRef}
           className="mt-3 text-2xl md:text-3xl font-semibold text-gray-600 dark:text-gray-300"
