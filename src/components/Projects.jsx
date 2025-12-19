@@ -1,3 +1,9 @@
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 const projects = [
   {
     title: "Job Dashboard",
@@ -23,6 +29,31 @@ const projects = [
 ];
 
 const Projects = () => {
+  const cardsRef = useRef([]);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        cardsRef.current,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: "#projects",
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    });
+
+    return () => ctx.revert(); // cleanup (important)
+  }, []);
+
   return (
     <section
       id="projects"
@@ -37,6 +68,7 @@ const Projects = () => {
           {projects.map((project, index) => (
             <div
               key={index}
+              ref={(el) => (cardsRef.current[index] = el)}
               className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
             >
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -52,23 +84,27 @@ const Projects = () => {
               </p>
 
               <div className="mt-6 flex gap-4">
-                <a
-                  href={project.live}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-medium text-black dark:text-white hover:underline"
-                >
-                  Live Demo →
-                </a>
+                {project.live !== "#" && (
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium text-black dark:text-white hover:underline"
+                  >
+                    Live Demo →
+                  </a>
+                )}
 
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:underline"
-                >
-                  GitHub
-                </a>
+                {project.github !== "#" && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:underline"
+                  >
+                    GitHub
+                  </a>
+                )}
               </div>
             </div>
           ))}
