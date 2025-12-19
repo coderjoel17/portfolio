@@ -4,7 +4,7 @@ const projects = [
     description: "A responsive dashboard to track and filter job applications.",
     tech: "React, Tailwind, API",
     live: "https://job-dashboard-ruddy.vercel.app/dashboard",
-    github: "#",
+    github: "https://github.com/coderjoel17/job-dashboard",
   },
   {
     title: "Group Battle Game",
